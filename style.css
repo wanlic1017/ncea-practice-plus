@@ -82,43 +82,40 @@ h1 {
 
 /* ===== QUIZ HEADER ===== */
 .quiz-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* back button | title | spacer */
   align-items: center;
-  justify-content: center; /* center overall alignment */
-  margin-bottom: 24px;
   position: relative;
+  margin-bottom: 24px;
 }
 
-/* COMPACT BACK BUTTON */
+/* Compact Back Button */
 #back-btn {
-  all: unset; /* remove inherited button styling */
-  display: inline-block;
+  justify-self: start;
+  border: 1px solid #d0d5dd;
   background: #e9edf3;
   color: #333;
   font-weight: 500;
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  transition: 0.2s;
-  position: absolute;
-  left: 0;                /* align left edge */
-  top: 50%;
-  transform: translateY(-50%);
-  border: 1px solid #d0d5dd;
+  transition: background 0.2s;
+  width: auto;
 }
 
 #back-btn:hover {
   background: #dce3ed;
 }
 
-/* CENTRED SUBJECT TITLE */
+/* Centred Subject Title */
 #subject-title {
+  justify-self: center;
   text-align: center;
   font-size: 20px;
   font-weight: 600;
   color: #0052cc;
+  margin: 0;
   white-space: nowrap;
-  margin: 0 auto;
 }
 
 /* ===== QUESTION AREA ===== */
