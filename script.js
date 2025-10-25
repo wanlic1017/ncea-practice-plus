@@ -1,22 +1,22 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const questionText = document.getElementById('question-text');
-  const subjectTitle = document.getElementById('subject-title');
-  const progressText = document.getElementById('progress-text');
-  const answerText = document.getElementById('answer-text');
-  const backBtn = document.getElementById('back-btn');
+document.addEventListener("DOMContentLoaded", async () => {
+  const questionText = document.getElementById("question-text");
+  const subjectTitle = document.getElementById("subject-title");
+  const progressText = document.getElementById("progress-text");
+  const answerText = document.getElementById("answer-text");
+  const backBtn = document.getElementById("back-btn");
 
   let questions = [];
   let currentIndex = 0;
 
-  // Get subject from URL
+  // subject from URL
   const params = new URLSearchParams(window.location.search);
-  const selectedSubject = params.get('subject') || 'General';
+  const selectedSubject = params.get("subject") || "General";
   subjectTitle.textContent = `${selectedSubject} Practice Questions`;
 
   try {
-    const res = await fetch('./questions.json');
+    // add cache-buster so GitHub always fetches latest JSON
+    const res = await fetch(`./questions.json?cb=${Date.now()}`);
     const allQuestions = await res.json();
-
     questions = allQuestions.filter(q => q.subject === selectedSubject);
 
     if (questions.length === 0) {
@@ -26,48 +26,46 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     showQuestion();
 
-    document.getElementById('reveal-answer').addEventListener('click', () => {
-      answerText.classList.remove('hidden');
+    document.getElementById("reveal-answer").addEventListener("click", () => {
+      answerText.classList.remove("hidden");
     });
 
-    document.getElementById('next-question').addEventListener('click', () => {
+    document.getElementById("next-question").addEventListener("click", () => {
       currentIndex = (currentIndex + 1) % questions.length;
       fadeOutIn(showQuestion);
     });
 
-    document.getElementById('contact-teacher').addEventListener('click', () => {
-      alert('A request to contact a teacher has been sent.');
+    document.getElementById("contact-teacher").addEventListener("click", () => {
+      alert("A request to contact a teacher has been sent.");
     });
 
-    backBtn.addEventListener('click', () => {
-      window.location.href = './home.html';
+    backBtn.addEventListener("click", () => {
+      window.location.href = "./home.html";
     });
-  } catch (error) {
-    questionText.textContent = 'Error loading questions.';
-    console.error(error);
+  } catch (err) {
+    console.error("Error loading questions:", err);
+    questionText.textContent = "Error loading questions.";
   }
 
   function showQuestion() {
     const q = questions[currentIndex];
     if (!q) return;
-
-    // Always hide the answer at the start
-    answerText.classList.add('hidden');
-
+    // always hide answer when showing a new question
+    answerText.classList.add("hidden");
     questionText.textContent = q.question;
-    document.getElementById('student-answer').value = '';
+    document.getElementById("student-answer").value = "";
     answerText.textContent = q.answer;
     progressText.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
   }
 
   function fadeOutIn(callback) {
-    const container = document.querySelector('.fade-container');
-    container.classList.add('fade-out');
+    const container = document.querySelector(".fade-container");
+    container.classList.add("fade-out");
     setTimeout(() => {
       callback();
-      container.classList.remove('fade-out');
-      container.classList.add('fade-in');
-      setTimeout(() => container.classList.remove('fade-in'), 300);
+      container.classList.remove("fade-out");
+      container.classList.add("fade-in");
+      setTimeout(() => container.classList.remove("fade-in"), 300);
     }, 300);
   }
 });
