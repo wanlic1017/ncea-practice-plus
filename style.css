@@ -83,7 +83,7 @@ h1 {
 /* ===== QUIZ HEADER ===== */
 .quiz-header {
   display: grid;
-  grid-template-columns: auto 1fr auto; /* back button | title | spacer */
+  grid-template-columns: auto 1fr auto; /* back | title | spacer */
   align-items: center;
   position: relative;
   margin-bottom: 24px;
@@ -248,43 +248,6 @@ form button[type="submit"]:hover {
   text-decoration: underline;
 }
 
-/* ===== ANIMATIONS ===== */
-.fade-container {
-  transition: opacity 0.3s ease-in-out;
-}
-
-.fade-out {
-  opacity: 0;
-}
-
-.fade-in {
-  opacity: 1;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 600px) {
-  .container, .glass-container {
-    margin: 30px 15px;
-    padding: 25px 20px;
-  }
-
-  #subject-title {
-    font-size: 17px;
-    max-width: 80%;
-    white-space: normal;
-  }
-
-  #back-btn {
-    font-size: 14px;
-    padding: 5px 10px;
-  }
-
-  button {
-    font-size: 14px;
-  }
-}
-
-
 /* ===== FLOATING MANAGE BUTTON ===== */
 #manage-btn {
   position: fixed;
@@ -327,6 +290,7 @@ form button[type="submit"]:hover {
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
 }
 .modal-content h2 {
   margin-top: 0;
@@ -341,10 +305,12 @@ form button[type="submit"]:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 .question-item span {
   flex: 1;
   font-size: 15px;
+  color: #333;
 }
 .delete-btn {
   background: #dc3545;
@@ -353,7 +319,47 @@ form button[type="submit"]:hover {
   border-radius: 4px;
   padding: 4px 8px;
   cursor: pointer;
+  font-size: 14px;
 }
 .delete-btn:hover {
   background: #b02a37;
+}
+
+/* ===== ANIMATIONS ===== */
+.fade-container {
+  transition: opacity 0.3s ease-in-out;
+}
+.fade-out {
+  opacity: 0;
+}
+.fade-in {
+  opacity: 1;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  .container, .glass-container {
+    margin: 30px 15px;
+    padding: 25px 20px;
+  }
+
+  #subject-title {
+    font-size: 17px;
+    max-width: 80%;
+    white-space: normal;
+  }
+
+  #back-btn {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+
+  #manage-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
 }
