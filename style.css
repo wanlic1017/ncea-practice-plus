@@ -21,7 +21,7 @@ html, body {
 
 h1 {
   font-weight: 600;
-  color: #0052cc; /* calm blue accent */
+  color: #0052cc;
   margin-bottom: 16px;
 }
 
@@ -83,15 +83,16 @@ h1 {
 /* ===== QUIZ HEADER ===== */
 .quiz-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  position: relative;
+  justify-content: center; /* center overall alignment */
   margin-bottom: 24px;
+  position: relative;
 }
 
-/* Compact Back Button */
+/* COMPACT BACK BUTTON */
 #back-btn {
-  border: none;
+  all: unset; /* remove inherited button styling */
+  display: inline-block;
   background: #e9edf3;
   color: #333;
   font-weight: 500;
@@ -99,24 +100,25 @@ h1 {
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s;
-  width: auto;              /* only as wide as text */
-  flex-shrink: 0;           /* don’t stretch */
+  position: absolute;
+  left: 0;                /* align left edge */
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #d0d5dd;
 }
 
 #back-btn:hover {
   background: #dce3ed;
 }
 
-/* Centred Subject Title */
+/* CENTRED SUBJECT TITLE */
 #subject-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   text-align: center;
   font-size: 20px;
   font-weight: 600;
   color: #0052cc;
   white-space: nowrap;
+  margin: 0 auto;
 }
 
 /* ===== QUESTION AREA ===== */
@@ -273,6 +275,11 @@ form button[type="submit"]:hover {
     font-size: 17px;
     max-width: 80%;
     white-space: normal;
+  }
+
+  #back-btn {
+    font-size: 14px;
+    padding: 5px 10px;
   }
 
   button {
