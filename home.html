@@ -31,8 +31,19 @@
     </div>
   </div>
 
-  <!-- Floating Manage Button -->
-  <button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
+ <!-- Floating Manage Button -->
+<button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
+
+<!-- Manage Questions Modal -->
+<div id="manage-modal" class="hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Manage Questions</h2>
+      <button id="close-manage" class="close-btn">✕</button>
+    </div>
+    <div id="question-list" style="max-height: 300px; overflow-y: auto;"></div>
+  </div>
+</div>
 
   <!-- Add Question Modal -->
   <div id="add-modal" class="hidden">
