@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NCEA Practice Portal</title>
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style.css?v=20251026" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -55,7 +55,7 @@
         <button id="close-add" class="close-btn">✕</button>
       </div>
 
-      <form id="add-form">
+      <form id="add-form" novalidate>
         <label>Subject:</label>
         <select id="add-subject">
           <option value="Physics">Physics</option>
@@ -67,10 +67,10 @@
         </select>
 
         <label>Question:</label>
-        <textarea id="add-question" placeholder="Enter the question text..."></textarea>
+        <textarea id="add-question" placeholder="Enter the question text..." required></textarea>
 
         <label>Answer:</label>
-        <textarea id="add-answer" placeholder="Enter the answer..."></textarea>
+        <textarea id="add-answer" placeholder="Enter the answer..." required></textarea>
 
         <button type="submit">Add Question</button>
       </form>
@@ -80,28 +80,28 @@
   <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
 
   <script>
-    // ---- Add Question Modal Logic ----
+    // ==== Add Question Modal Logic ====
     const openAdd = document.getElementById("open-add-modal");
     const addModal = document.getElementById("add-modal");
     const closeAdd = document.getElementById("close-add");
 
-    openAdd.addEventListener("click", () => {
-      addModal.classList.remove("hidden");
-    });
-
-    closeAdd.addEventListener("click", () => {
-      addModal.classList.add("hidden");
-    });
+    openAdd.addEventListener("click", () => addModal.classList.remove("hidden"));
+    closeAdd.addEventListener("click", () => addModal.classList.add("hidden"));
 
     const form = document.getElementById("add-form");
     form.addEventListener("submit", e => {
       e.preventDefault();
-      const subject = document.getElementById("add-subject").value;
-      const question = document.getElementById("add-question").value.trim();
-      const answer = document.getElementById("add-answer").value.trim();
 
-      if (!question || !answer) {
-        alert("Please fill in both question and answer.");
+      const subjectEl = document.getElementById("add-subject");
+      const questionEl = document.getElementById("add-question");
+      const answerEl = document.getElementById("add-answer");
+
+      const subject = subjectEl.value;
+      const question = questionEl.value.trim();
+      const answer = answerEl.value.trim();
+
+      if (question.length === 0 || answer.length === 0) {
+        alert("⚠️ Please fill in both question and answer.");
         return;
       }
 
@@ -110,11 +110,12 @@
       localStorage.setItem("customQuestions", JSON.stringify(stored));
 
       alert("✅ Question added successfully!");
-      form.reset();
+      questionEl.value = "";
+      answerEl.value = "";
       addModal.classList.add("hidden");
     });
   </script>
 
-  <script src="./script.js"></script>
+  <script src="./script.js?v=20251026"></script>
 </body>
 </html>
