@@ -8,20 +8,41 @@ html, body {
   height: 100%;
 }
 
-/* ===== LAYOUT ===== */
-.container, .glass-container {
+/* ===== HEADER (Dark Banner) ===== */
+.dark-banner {
+  background-color: #003366; /* Deep blue header */
+  color: #ffffff;
+  text-align: center;
+  padding: 18px 0;
+}
+
+.dark-banner .site-title {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ===== CONTAINER & TYPOGRAPHY ===== */
+.container {
   background: #ffffff;
   border: 1px solid #e3e6eb;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   max-width: 720px;
-  margin: 60px auto;
+  margin: 50px auto;
   padding: 40px 50px;
 }
 
 h1 {
   font-weight: 600;
-  color: #0052cc;
+  color: #003366;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-weight: 600;
+  color: #003366;
   margin-bottom: 16px;
 }
 
@@ -31,38 +52,7 @@ h1 {
   margin-bottom: 30px;
 }
 
-/* ===== HEADER ===== */
-.site-header {
-  background: #ffffff;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 10px 0;
-  text-align: center;
-}
-
-.header-inner {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-
-.site-title {
-  color: #0052cc;
-  font-size: 22px;
-  margin: 0;
-  font-weight: 600;
-}
-
-.header-sub {
-  color: #666;
-  font-size: 13px;
-  margin: 0;
-  font-style: italic;
-}
-
-
-/* ===== SUBJECT SELECTION GRID ===== */
+/* ===== SUBJECT GRID ===== */
 .subject-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -88,16 +78,78 @@ h1 {
   transform: translateY(-2px);
 }
 
+/* ===== ADD QUESTION BUTTON ===== */
+#open-add-modal, #add-question-btn {
+  background-color: #0052cc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 22px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+#open-add-modal:hover, #add-question-btn:hover {
+  background-color: #003f9e;
+}
+
+/* ===== FORM ELEMENTS ===== */
+label {
+  display: block;
+  margin-top: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+textarea,
+select,
+input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cfd8e3;
+  font-size: 15px;
+  font-family: inherit;
+  background: #fff;
+  resize: none;
+}
+
+textarea:focus,
+select:focus,
+input:focus {
+  outline: none;
+  border-color: #0052cc;
+  box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.1);
+}
+
+/* ===== FORM BUTTONS ===== */
+#add-form button[type="submit"] {
+  margin-top: 24px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #0052cc;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+#add-form button[type="submit"]:hover {
+  background: #003f9e;
+}
+
 /* ===== QUIZ HEADER ===== */
 .quiz-header {
   display: grid;
-  grid-template-columns: auto 1fr auto; /* back | title | spacer */
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   position: relative;
   margin-bottom: 24px;
 }
 
-/* Compact Back Button */
 #back-btn {
   justify-self: start;
   border: 1px solid #d0d5dd;
@@ -115,7 +167,6 @@ h1 {
   background: #dce3ed;
 }
 
-/* Centred Subject Title */
 #subject-title {
   justify-self: center;
   text-align: center;
@@ -134,22 +185,8 @@ h1 {
   margin-bottom: 20px;
 }
 
-textarea {
-  width: 100%;
+textarea#student-answer {
   height: 100px;
-  border-radius: 8px;
-  border: 1px solid #cfd8e3;
-  padding: 10px;
-  font-size: 15px;
-  color: #333;
-  resize: none;
-  background: #fff;
-}
-
-textarea:focus {
-  outline: none;
-  border-color: #0052cc;
-  box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.1);
 }
 
 /* ===== BUTTON ROW ===== */
@@ -177,7 +214,6 @@ button:hover {
   background: #003f9e;
 }
 
-/* Secondary buttons */
 #next-question {
   background: #f1f3f5;
   color: #333;
@@ -213,49 +249,6 @@ button:hover {
   display: none !important;
 }
 
-/* ===== FOOTER ===== */
-footer {
-  text-align: center;
-  font-size: 14px;
-  color: #777;
-  margin-top: 60px;
-}
-
-/* ===== ADMIN PANEL ===== */
-form label {
-  display: block;
-  margin-top: 16px;
-  font-weight: 500;
-  font-size: 14px;
-  color: #333;
-}
-
-select, textarea, input {
-  margin-top: 6px;
-  width: 100%;
-}
-
-form button[type="submit"] {
-  background: #0052cc;
-  border: 1px solid #0052cc;
-  color: #fff;
-  margin-top: 20px;
-}
-
-form button[type="submit"]:hover {
-  background: #003f9e;
-}
-
-.admin-link a {
-  color: #0052cc;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.admin-link a:hover {
-  text-decoration: underline;
-}
-
 /* ===== FLOATING MANAGE BUTTON ===== */
 #manage-btn {
   position: fixed;
@@ -276,8 +269,8 @@ form button[type="submit"]:hover {
   background: #003f9e;
 }
 
-/* ===== MODAL ===== */
-#manage-modal {
+/* ===== MODALS (Add + Manage) ===== */
+#add-modal, #manage-modal {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.45);
@@ -286,7 +279,7 @@ form button[type="submit"]:hover {
   justify-content: center;
   z-index: 1000;
 }
-#manage-modal.hidden {
+#add-modal.hidden, #manage-modal.hidden {
   display: none;
 }
 .modal-content {
@@ -304,6 +297,23 @@ form button[type="submit"]:hover {
   margin-top: 0;
   color: #0052cc;
 }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #777;
+}
+.close-btn:hover {
+  color: #000;
+}
+
+/* ===== MANAGE QUESTION LIST ===== */
 #question-list {
   margin-top: 10px;
 }
@@ -344,9 +354,17 @@ form button[type="submit"]:hover {
   opacity: 1;
 }
 
-/* ===== MOBILE ===== */
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  margin: 50px 0 20px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 600px) {
-  .container, .glass-container {
+  .container {
     margin: 30px 15px;
     padding: 25px 20px;
   }
