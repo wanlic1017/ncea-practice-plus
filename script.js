@@ -8,11 +8,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   let questions = [];
   let currentIndex = 0;
 
-  // Extract subject from URL
+  // Get subject from URL
   const params = new URLSearchParams(window.location.search);
   const selectedSubject = params.get('subject') || 'General';
-
-  // Display the subject title immediately
   subjectTitle.textContent = `${selectedSubject} Practice Questions`;
 
   try {
@@ -34,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('next-question').addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % questions.length;
-      fadeOutIn(() => showQuestion());
+      fadeOutIn(showQuestion);
     });
 
     document.getElementById('contact-teacher').addEventListener('click', () => {
@@ -51,10 +49,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function showQuestion() {
     const q = questions[currentIndex];
+    if (!q) return;
+
+    // Always hide the answer at the start
+    answerText.classList.add('hidden');
+
     questionText.textContent = q.question;
     document.getElementById('student-answer').value = '';
     answerText.textContent = q.answer;
-    answerText.classList.add('hidden');
     progressText.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
   }
 
