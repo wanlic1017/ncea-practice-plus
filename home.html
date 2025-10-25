@@ -9,13 +9,18 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Clean Header -->
   <header class="site-header">
-    <img src="./assets/ncea-logo.png" alt="NCEA Logo" class="ncea-logo">
-    <h1 class="site-title">NCEA Practice Portal</h1>
+    <div class="header-inner">
+      <img src="./assets/ncea-logo.png" alt="NCEA" class="ncea-logo-small">
+      <div>
+        <h1 class="site-title">NCEA Practice Portal</h1>
+        <p class="header-sub">Prepare smarter. Practice confidently.</p>
+      </div>
+    </div>
   </header>
 
-  <!-- Subject Selection -->
+  <!-- Subject Grid -->
   <div class="container">
     <h1>Select a Subject</h1>
     <p class="subtitle">Choose a subject below to start practising NCEA past exam questions.</p>
@@ -30,14 +35,38 @@
     </div>
   </div>
 
-  <!-- Floating Manage Button (only visible on home page) -->
+  <!-- Admin: Add Question -->
+  <div class="container">
+    <h2>Add New Question</h2>
+    <form id="add-form">
+      <label>Subject:</label>
+      <select id="add-subject">
+        <option value="Physics">Physics</option>
+        <option value="Biology">Biology</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Calculus">Calculus</option>
+        <option value="Statistics">Statistics</option>
+        <option value="Health Science">Health Science</option>
+      </select>
+
+      <label>Question:</label>
+      <textarea id="add-question" placeholder="Enter the question text..."></textarea>
+
+      <label>Answer:</label>
+      <textarea id="add-answer" placeholder="Enter the answer..."></textarea>
+
+      <button type="submit">Add Question</button>
+    </form>
+  </div>
+
+  <!-- Floating Manage Button -->
   <button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
 
-  <!-- Modal Window -->
+  <!-- Modal -->
   <div id="manage-modal" class="hidden">
     <div class="modal-content">
       <h2>Manage Questions</h2>
-      <p style="margin-top: -5px; color: #555;">View or remove questions from the current question pool.</p>
+      <p style="margin-top:-5px; color:#555;">View or remove questions from your current pool.</p>
       <div id="question-list"></div>
       <button id="close-manage">Close</button>
     </div>
