@@ -31,28 +31,40 @@ h1 {
   margin-bottom: 30px;
 }
 
-/* ===== HEADER (LOGO + TITLE) ===== */
+/* ===== HEADER ===== */
 .site-header {
-  display: flex;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.header-inner {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 20px 0 10px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #ffffff;
 }
 
-.ncea-logo {
-  height: 50px;
+.ncea-logo-small {
+  height: 40px;
   width: auto;
 }
 
 .site-title {
-  font-size: 22px;
   color: #0052cc;
-  font-weight: 600;
+  font-size: 22px;
   margin: 0;
+  font-weight: 600;
 }
+
+.header-sub {
+  color: #666;
+  font-size: 13px;
+  margin: 0;
+  font-style: italic;
+}
+
 
 /* ===== SUBJECT SELECTION GRID ===== */
 .subject-grid {
