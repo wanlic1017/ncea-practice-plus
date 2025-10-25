@@ -1,58 +1,86 @@
-document.addEventListener("DOMContentLoaded", async () => {
+// ==================================================
+// NCEA Practice Portal Script
+// ==================================================
+document.addEventListener("DOMContentLoaded", () => {
   const path = window.location.pathname;
-  const isHome = path.endsWith("home.html") || path === "/";
+  const isHome =
+    path.endsWith("home.html") ||
+    path.endsWith("/") ||
+    path.endsWith("/ncea-practice-plus");
 
-  // ======================
+  // ==================================================
   // HOME PAGE LOGIC
-  // ======================
+  // ==================================================
   if (isHome) {
-    console.log("Home page detected");
+    // ---------- Add Question Modal ----------
+    const addModal = document.getElementById("add-modal");
+    const openAddBtn = document.getElementById("open-add-modal");
+    const closeAddBtn = document.getElementById("close-add");
+    const addForm = document.getElementById("add-form");
 
-    const form = document.getElementById("add-form");
+    if (openAddBtn && addModal && closeAddBtn && addForm) {
+      openAddBtn.addEventListener("click", () => {
+        addModal.classList.remove("hidden");
+      });
+      closeAddBtn.addEventListener("click", () => {
+        addModal.classList.add("hidden");
+      });
+
+      // Handle Add Form Submission
+      addForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Always read values live from DOM
+        const subject = document.getElementById("subject").value.trim();
+        const question = document.getElementById("question").value.trim();
+        const answer = document.getElementById("answer").value.trim();
+
+        // Debug line (optional)
+        console.log("Submitting:", { subject, question, answer });
+
+        if (!question || !answer) {
+          alert("⚠️ Please fill in both question and answer.");
+          return;
+        }
+
+        let stored = [];
+        try {
+          stored = JSON.parse(localStorage.getItem("customQuestions")) || [];
+        } catch {
+          stored = [];
+        }
+
+        stored.push({ subject, question, answer });
+        localStorage.setItem("customQuestions", JSON.stringify(stored));
+
+        alert("✅ Question added successfully!");
+        addForm.reset();
+        addModal.classList.add("hidden");
+      });
+    }
+
+    // ---------- Manage Questions ----------
     const manageBtn = document.getElementById("manage-btn");
     const manageModal = document.getElementById("manage-modal");
     const closeManage = document.getElementById("close-manage");
     const questionList = document.getElementById("question-list");
 
-    // ---------- Add Question ----------
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const subject = document.getElementById("add-subject").value;
-      const question = document.getElementById("add-question").value.trim();
-      const answer = document.getElementById("add-answer").value.trim();
-
-      if (!question || !answer) {
-        alert("Please fill in both question and answer.");
-        return;
-      }
-
-      const stored = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-      stored.push({ subject, question, answer });
-      localStorage.setItem("customQuestions", JSON.stringify(stored));
-
-      alert("✅ Question added successfully!");
-      form.reset();
-    });
-
-    // ---------- Manage Modal ----------
-    manageBtn.addEventListener("click", populateManageModal);
-    closeManage.addEventListener("click", () => {
-      manageModal.classList.add("hidden");
-    });
-
     function populateManageModal() {
-      manageModal.classList.remove("hidden");
+      if (!questionList) return;
       questionList.innerHTML = "<p>Loading...</p>";
 
       fetch("./questions.json")
-        .then(r => r.json())
-        .then(defaultQs => {
-          const customQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-          const deletedQs = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
+        .then((r) => r.json())
+        .then((defaultQs) => {
+          const customQs = JSON.parse(
+            localStorage.getItem("customQuestions") || "[]"
+          );
+          const deletedQs = JSON.parse(
+            localStorage.getItem("deletedQuestions") || "[]"
+          );
 
-          // Combine default + custom (excluding deleted)
-          let combined = [...defaultQs, ...customQs].filter(
-            q => !deletedQs.some(d => d.question === q.question)
+          const combined = [...defaultQs, ...customQs].filter(
+            (q) => !deletedQs.some((d) => d.question === q.question)
           );
 
           if (!combined.length) {
@@ -66,89 +94,149 @@ document.addEventListener("DOMContentLoaded", async () => {
             item.className = "question-item";
             item.innerHTML = `
               <span>${i + 1}. <strong>${q.subject}</strong> – ${q.question}</span>
-              <button class="delete-btn" data-q="${q.question}">Delete</button>
+              <button class="delete-btn" data-q="${encodeURIComponent(
+                q.question
+              )}">Delete</button>
             `;
             questionList.appendChild(item);
           });
 
-          document.querySelectorAll(".delete-btn").forEach(btn => {
-            btn.addEventListener("click", e => {
-              const qText = e.target.getAttribute("data-q");
-              deleteQuestion(qText);
+          // Delete functionality
+          questionList.querySelectorAll(".delete-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              const qText = decodeURIComponent(
+                e.currentTarget.getAttribute("data-q") || ""
+              );
+              const deleted = JSON.parse(
+                localStorage.getItem("deletedQuestions") || "[]"
+              );
+              if (!deleted.some((d) => d.question === qText)) {
+                deleted.push({ question: qText });
+                localStorage.setItem(
+                  "deletedQuestions",
+                  JSON.stringify(deleted)
+                );
+              }
+              populateManageModal();
             });
           });
+        })
+        .catch(() => {
+          questionList.innerHTML =
+            "<p style='color:red;'>Failed to load questions.</p>";
         });
     }
 
-    function deleteQuestion(qText) {
-      const deletedQs = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
-      if (!deletedQs.some(q => q.question === qText)) {
-        deletedQs.push({ question: qText });
-      }
-      localStorage.setItem("deletedQuestions", JSON.stringify(deletedQs));
-      populateManageModal();
+    if (manageBtn && manageModal && closeManage) {
+      manageBtn.addEventListener("click", () => {
+        populateManageModal();
+        manageModal.classList.remove("hidden");
+      });
+      closeManage.addEventListener("click", () => {
+        manageModal.classList.add("hidden");
+      });
     }
   }
 
-  // ======================
-  // QUIZ PAGE LOGIC
-  // ======================
+  // ==================================================
+  // QUIZ PAGE LOGIC (index.html)
+  // ==================================================
   if (window.location.search.includes("subject=")) {
+    const params = new URLSearchParams(window.location.search);
+    const subject = params.get("subject") || "General";
+
     const questionText = document.getElementById("question-text");
     const subjectTitle = document.getElementById("subject-title");
     const progressText = document.getElementById("progress-text");
     const answerText = document.getElementById("answer-text");
     const backBtn = document.getElementById("back-btn");
 
-    const params = new URLSearchParams(window.location.search);
-    const subject = params.get("subject") || "General";
-    subjectTitle.textContent = `${subject} Practice Questions`;
+    if (subjectTitle)
+      subjectTitle.textContent = `${subject} Practice Questions`;
 
     let questions = [];
     let current = 0;
 
-    async function load() {
-      const res = await fetch("./questions.json");
-      const defaultQs = await res.json();
-      const customQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-      const deletedQs = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
+    async function loadQuestions() {
+      try {
+        const res = await fetch("./questions.json");
+        const defaults = await res.json();
+        const custom = JSON.parse(
+          localStorage.getItem("customQuestions") || "[]"
+        );
+        const deleted = JSON.parse(
+          localStorage.getItem("deletedQuestions") || "[]"
+        );
 
-      questions = [...defaultQs, ...customQs]
-        .filter(q => q.subject === subject)
-        .filter(q => !deletedQs.some(d => d.question === q.question));
+        questions = [...defaults, ...custom]
+          .filter((q) => q.subject === subject)
+          .filter((q) => !deleted.some((d) => d.question === q.question));
 
-      if (!questions.length) {
-        questionText.textContent = "No questions available for this subject.";
-        return;
+        if (!questions.length) {
+          questionText.textContent = `No questions available for ${subject}.`;
+          return;
+        }
+
+        showQuestion();
+      } catch (err) {
+        console.error("Error loading questions:", err);
+        questionText.textContent = "Error loading questions.";
+      }
+    }
+
+    function showQuestion() {
+      const q = questions[current];
+      if (!q) return;
+
+      if (questionText) questionText.textContent = q.question;
+      if (progressText)
+        progressText.textContent = `Question ${current + 1} of ${
+          questions.length
+        }`;
+
+      if (answerText) {
+        answerText.textContent = q.answer;
+        answerText.classList.add("hidden");
+        answerText.style.display = "none";
       }
 
-      show();
+      const studentAnswer = document.getElementById("student-answer");
+      if (studentAnswer) studentAnswer.value = "";
     }
 
-    function show() {
-      const q = questions[current];
-      questionText.textContent = q.question;
-      answerText.textContent = q.answer;
-      answerText.classList.add("hidden");
-      progressText.textContent = `Question ${current + 1} of ${questions.length}`;
-      document.getElementById("student-answer").value = "";
+    // Reveal answer
+    const revealBtn = document.getElementById("reveal-answer");
+    if (revealBtn && answerText) {
+      revealBtn.addEventListener("click", () => {
+        answerText.classList.remove("hidden");
+        answerText.style.display = "block";
+      });
     }
 
-    document.getElementById("reveal-answer").onclick = () => {
-      answerText.classList.remove("hidden");
-    };
+    // Next question
+    const nextBtn = document.getElementById("next-question");
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        current = (current + 1) % questions.length;
+        showQuestion();
+      });
+    }
 
-    document.getElementById("next-question").onclick = () => {
-      current = (current + 1) % questions.length;
-      show();
-    };
+    // Contact teacher
+    const contactBtn = document.getElementById("contact-teacher");
+    if (contactBtn) {
+      contactBtn.addEventListener("click", () =>
+        alert("📩 A request to contact a teacher has been sent.")
+      );
+    }
 
-    document.getElementById("contact-teacher").onclick = () => {
-      alert("A request to contact a teacher has been sent.");
-    };
+    // Back button
+    if (backBtn) {
+      backBtn.addEventListener("click", () => {
+        window.location.href = "./home.html";
+      });
+    }
 
-    backBtn.onclick = () => (window.location.href = "./home.html");
-
-    load();
+    loadQuestions();
   }
 });
