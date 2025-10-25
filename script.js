@@ -7,17 +7,23 @@ async function loadQuestions() {
     const res = await fetch('questions.json');
     const allQuestions = await res.json();
 
-    // Check if subject is passed in the URL
+    // Get selected subject from URL
     const params = new URLSearchParams(window.location.search);
     selectedSubject = params.get('subject');
 
-    // Filter by subject (if chosen)
+    // Filter questions by subject
     questions = selectedSubject
       ? allQuestions.filter(q => q.subject === selectedSubject)
       : allQuestions;
 
+    const titleEl = document.getElementById('subject-title');
+    titleEl.textContent = selectedSubject
+      ? `${selectedSubject} Practice Questions`
+      : 'Practice Questions';
+
     if (questions.length === 0) {
-      document.getElementById('question-text').textContent = `No questions available for ${selectedSubject}.`;
+      document.getElementById('question-text').textContent =
+        `No questions available for ${selectedSubject}.`;
       return;
     }
 
@@ -33,6 +39,10 @@ function showQuestion() {
   document.getElementById('student-answer').value = '';
   document.getElementById('answer-text').textContent = q.answer;
   document.getElementById('answer-text').classList.add('hidden');
+
+  // Update progress text
+  document.getElementById('progress-text').textContent =
+    `Question ${currentIndex + 1} of ${questions.length}`;
 }
 
 document.getElementById('reveal-answer').addEventListener('click', () => {
@@ -46,6 +56,10 @@ document.getElementById('next-question').addEventListener('click', () => {
 
 document.getElementById('contact-teacher').addEventListener('click', () => {
   alert('A request to contact a teacher has been sent.');
+});
+
+document.getElementById('back-btn').addEventListener('click', () => {
+  window.location.href = 'home.html';
 });
 
 loadQuestions();
