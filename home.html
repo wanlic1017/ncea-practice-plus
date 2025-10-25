@@ -1,37 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NCEA Practice Portal</title>
-  <link rel="stylesheet" href="./style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
-</head>
-<body class="gradient-bg">
-  <div class="glass-container">
-    <h1 class="neon-title">NCEA Practice Portal</h1>
-    <p class="subtitle">Select a subject to begin:</p>
+<!-- Floating Manage Button -->
+<button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
 
-    <div class="subject-grid">
-      <button onclick="goToSubject('Physics')">Physics</button>
-      <button onclick="goToSubject('Chemistry')">Chemistry</button>
-      <button onclick="goToSubject('Biology')">Biology</button>
-      <button onclick="goToSubject('Calculus')">Calculus</button>
-      <button onclick="goToSubject('Statistics')">Statistics</button>
-      <button onclick="goToSubject('Health Science')">Health Science</button>
-    </div>
-
-    <p class="admin-link" style="text-align:center;margin-top:30px;">
-      <a href="./upload.html">Admin Upload Portal →</a>
-    </p>
+<!-- Modal Window -->
+<div id="manage-modal" class="hidden">
+  <div class="modal-content">
+    <h2>Manage Questions</h2>
+    <div id="question-list"></div>
+    <button id="close-manage">Close</button>
   </div>
-
-  <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
-
-  <script>
-    function goToSubject(subject) {
-      window.location.href = `./index.html?subject=${encodeURIComponent(subject)}`;
-    }
-  </script>
-</body>
-</html>
+</div>
