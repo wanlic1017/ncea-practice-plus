@@ -5,23 +5,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   const answerText = document.getElementById("answer-text");
   const backBtn = document.getElementById("back-btn");
 
+  const manageBtn = document.getElementById("manage-btn");
+  const manageModal = document.getElementById("manage-modal");
+  const closeManage = document.getElementById("close-manage");
+  const questionList = document.getElementById("question-list");
+
   let questions = [];
   let currentIndex = 0;
   let selectedSubject = null;
 
-  // Extract subject from URL
   const params = new URLSearchParams(window.location.search);
   selectedSubject = params.get("subject") || "General";
   subjectTitle.textContent = `${selectedSubject} Practice Questions`;
 
-  // Load questions from JSON + localStorage
   async function loadQuestions() {
     try {
       const res = await fetch(`./questions.json?cb=${Date.now()}`);
       const allQuestions = await res.json();
       const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
 
-      // Combine both pools
       const combined = [...allQuestions, ...localQs];
       questions = combined.filter(q => q.subject === selectedSubject);
 
@@ -38,54 +40,91 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // Show question function
   function showQuestion() {
     const q = questions[currentIndex];
     if (!q) return;
-
-    // Always hide the answer first
     answerText.classList.add("hidden");
     answerText.style.display = "none";
-
     questionText.textContent = q.question;
     document.getElementById("student-answer").value = "";
     answerText.textContent = q.answer;
     progressText.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
   }
 
-  // Reveal Answer button
   document.getElementById("reveal-answer").addEventListener("click", () => {
     answerText.classList.remove("hidden");
-    answerText.style.display = "block"; // ensures it becomes visible again
+    answerText.style.display = "block";
   });
 
-  // Next Question button
   document.getElementById("next-question").addEventListener("click", () => {
     currentIndex = (currentIndex + 1) % questions.length;
     fadeOutIn(showQuestion);
   });
 
-  // Contact Teacher button
   document.getElementById("contact-teacher").addEventListener("click", () => {
     alert("A request to contact a teacher has been sent.");
   });
 
-  // Back Button
   backBtn.addEventListener("click", () => {
     window.location.href = "./home.html";
   });
 
-  // Auto-refresh questions if new ones are added
-  window.addEventListener("storage", event => {
-    if (event.key === "customQuestions") {
-      loadQuestions();
-    }
+  /* ---------- MANAGE QUESTIONS ---------- */
+  manageBtn.addEventListener("click", () => {
+    populateManageModal();
+    manageModal.classList.remove("hidden");
   });
 
-  // Reload questions when refocusing the tab
+  closeManage.addEventListener("click", () => {
+    manageModal.classList.add("hidden");
+  });
+
+  function populateManageModal() {
+    questionList.innerHTML = "";
+    const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
+    const filtered = localQs.filter(q => q.subject === selectedSubject);
+
+    if (filtered.length === 0) {
+      questionList.innerHTML = `<p style="color:#555;">No custom questions for ${selectedSubject}.</p>`;
+      return;
+    }
+
+    filtered.forEach((q, i) => {
+      const item = document.createElement("div");
+      item.className = "question-item";
+      item.innerHTML = `
+        <span>${i + 1}. ${q.question}</span>
+        <button class="delete-btn" data-index="${i}">Delete</button>
+      `;
+      questionList.appendChild(item);
+    });
+
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", e => {
+        const index = e.target.getAttribute("data-index");
+        deleteQuestion(index);
+      });
+    });
+  }
+
+  function deleteQuestion(index) {
+    const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
+    const filtered = localQs.filter(q => q.subject === selectedSubject);
+    const keep = localQs.filter(q => q.subject !== selectedSubject);
+    filtered.splice(index, 1);
+    const updated = [...keep, ...filtered];
+    localStorage.setItem("customQuestions", JSON.stringify(updated));
+    populateManageModal();
+    loadQuestions();
+  }
+
+  /* ---------- Helpers ---------- */
+  window.addEventListener("storage", event => {
+    if (event.key === "customQuestions") loadQuestions();
+  });
+
   window.addEventListener("focus", loadQuestions);
 
-  // Fade animation for question transitions
   function fadeOutIn(callback) {
     const container = document.querySelector(".fade-container");
     container.classList.add("fade-out");
@@ -97,6 +136,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 300);
   }
 
-  // Load questions on first run
   await loadQuestions();
 });
