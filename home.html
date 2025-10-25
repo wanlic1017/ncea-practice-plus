@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NCEA Practice Portal</title>
-  <link rel="stylesheet" href="./style.css?v=20251026" />
+  <link rel="stylesheet" href="./style.css?v=20251027" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -14,7 +14,7 @@
     <h1 class="site-title">NCEA Practice Portal</h1>
   </header>
 
-  <!-- Subject Grid -->
+  <!-- Main Content -->
   <div class="container">
     <h1>Select a Subject</h1>
     <p class="subtitle">Choose a subject below to start practising NCEA past exam questions.</p>
@@ -28,7 +28,6 @@
       <button onclick="location.href='./index.html?subject=Health Science'">Health Science</button>
     </div>
 
-    <!-- Add Question Button -->
     <div style="text-align:center; margin-top:40px;">
       <button id="open-add-modal">➕ Add New Question</button>
     </div>
@@ -36,16 +35,6 @@
 
   <!-- Floating Manage Button -->
   <button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
-
-  <!-- Manage Modal -->
-  <div id="manage-modal" class="hidden">
-    <div class="modal-content">
-      <h2>Manage Questions</h2>
-      <p style="margin-top:-5px; color:#555;">View or remove questions from your current pool.</p>
-      <div id="question-list"></div>
-      <button id="close-manage">Close</button>
-    </div>
-  </div>
 
   <!-- Add Question Modal -->
   <div id="add-modal" class="hidden">
@@ -57,7 +46,7 @@
 
       <form id="add-form" novalidate>
         <label for="add-subject">Subject:</label>
-        <select id="add-subject" required>
+        <select id="add-subject">
           <option value="Physics">Physics</option>
           <option value="Biology">Biology</option>
           <option value="Chemistry">Chemistry</option>
@@ -67,12 +56,12 @@
         </select>
 
         <label for="add-question">Question:</label>
-        <textarea id="add-question" placeholder="Enter the question text..." required></textarea>
+        <textarea id="add-question" placeholder="Enter the question text..."></textarea>
 
         <label for="add-answer">Answer:</label>
-        <textarea id="add-answer" placeholder="Enter the answer..." required></textarea>
+        <textarea id="add-answer" placeholder="Enter the answer..."></textarea>
 
-        <button type="submit" id="submit-question">Add Question</button>
+        <button type="submit">Add Question</button>
       </form>
     </div>
   </div>
@@ -80,41 +69,29 @@
   <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
 
   <script>
-    // --- Modal open/close ---
-    const openAdd = document.getElementById("open-add-modal");
+    // --- Modal Open/Close ---
     const addModal = document.getElementById("add-modal");
-    const closeAdd = document.getElementById("close-add");
+    document.getElementById("open-add-modal").onclick = () => addModal.classList.remove("hidden");
+    document.getElementById("close-add").onclick = () => addModal.classList.add("hidden");
 
-    openAdd.addEventListener("click", () => {
-      addModal.classList.remove("hidden");
-    });
-
-    closeAdd.addEventListener("click", () => {
-      addModal.classList.add("hidden");
-    });
-
-    // --- Add Question Form Logic ---
-    const form = document.getElementById("add-form");
-
-    form.addEventListener("submit", function (e) {
+    // --- Add Form Logic ---
+    document.getElementById("add-form").addEventListener("submit", function (e) {
       e.preventDefault();
 
-      // Explicitly fetch DOM values on submit
-      const subjectEl = document.getElementById("add-subject");
-      const questionEl = document.getElementById("add-question");
-      const answerEl = document.getElementById("add-answer");
+      // Read live values directly
+      const subject = document.querySelector("#add-subject").value.trim();
+      const question = document.querySelector("#add-question").value.trim();
+      const answer = document.querySelector("#add-answer").value.trim();
 
-      const subject = subjectEl ? subjectEl.value.trim() : "";
-      const question = questionEl ? questionEl.value.trim() : "";
-      const answer = answerEl ? answerEl.value.trim() : "";
+      console.log("Subject:", subject);
+      console.log("Question:", question);
+      console.log("Answer:", answer);
 
-      // Validation
-      if (!question || !answer) {
+      if (question === "" || answer === "") {
         alert("⚠️ Please fill in both question and answer.");
         return;
       }
 
-      // Get existing custom questions
       let stored = [];
       try {
         stored = JSON.parse(localStorage.getItem("customQuestions")) || [];
@@ -122,17 +99,15 @@
         stored = [];
       }
 
-      // Add new question
       stored.push({ subject, question, answer });
       localStorage.setItem("customQuestions", JSON.stringify(stored));
 
       alert("✅ Question added successfully!");
-      questionEl.value = "";
-      answerEl.value = "";
+      this.reset();
       addModal.classList.add("hidden");
     });
   </script>
 
-  <script src="./script.js?v=20251026"></script>
+  <script src="./script.js?v=20251027"></script>
 </body>
 </html>
