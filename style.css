@@ -283,3 +283,77 @@ form button[type="submit"]:hover {
     font-size: 14px;
   }
 }
+
+
+/* ===== FLOATING MANAGE BUTTON ===== */
+#manage-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #0052cc;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: 0.25s;
+  z-index: 999;
+}
+#manage-btn:hover {
+  background: #003f9e;
+}
+
+/* ===== MODAL ===== */
+#manage-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+#manage-modal.hidden {
+  display: none;
+}
+.modal-content {
+  background: #fff;
+  color: #222;
+  border-radius: 10px;
+  padding: 25px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-content h2 {
+  margin-top: 0;
+  color: #0052cc;
+}
+#question-list {
+  margin-top: 10px;
+}
+.question-item {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.question-item span {
+  flex: 1;
+  font-size: 15px;
+}
+.delete-btn {
+  background: #dc3545;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.delete-btn:hover {
+  background: #b02a37;
+}
