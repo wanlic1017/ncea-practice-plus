@@ -7,68 +7,74 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let questions = [];
   let currentIndex = 0;
+  let selectedSubject = null;
 
-  // Get selected subject from URL
+  // Extract subject from URL
   const params = new URLSearchParams(window.location.search);
-  const selectedSubject = params.get("subject") || "General";
+  selectedSubject = params.get("subject") || "General";
   subjectTitle.textContent = `${selectedSubject} Practice Questions`;
 
-  try {
-    // Fetch main question pool
-    const res = await fetch(`./questions.json?cb=${Date.now()}`);
-    const allQuestions = await res.json();
+  async function loadQuestions() {
+    try {
+      const res = await fetch(`./questions.json?cb=${Date.now()}`);
+      const allQuestions = await res.json();
+      const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
 
-    // Fetch locally added questions (from Admin Upload)
-    const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
+      const combined = [...allQuestions, ...localQs];
+      questions = combined.filter(q => q.subject === selectedSubject);
 
-    // Combine both
-    const combined = [...allQuestions, ...localQs];
+      if (questions.length === 0) {
+        questionText.textContent = `No questions available for ${selectedSubject}.`;
+        return;
+      }
 
-    // Filter by subject
-    questions = combined.filter(q => q.subject === selectedSubject);
-
-    if (questions.length === 0) {
-      questionText.textContent = `No questions available for ${selectedSubject}.`;
-      return;
+      currentIndex = 0;
+      showQuestion();
+    } catch (err) {
+      console.error("Error loading questions:", err);
+      questionText.textContent = "Error loading questions.";
     }
-
-    showQuestion();
-
-    // Button event listeners
-    document.getElementById("reveal-answer").addEventListener("click", () => {
-      answerText.classList.remove("hidden");
-    });
-
-    document.getElementById("next-question").addEventListener("click", () => {
-      currentIndex = (currentIndex + 1) % questions.length;
-      fadeOutIn(showQuestion);
-    });
-
-    document.getElementById("contact-teacher").addEventListener("click", () => {
-      alert("A request to contact a teacher has been sent.");
-    });
-
-    backBtn.addEventListener("click", () => {
-      window.location.href = "./home.html";
-    });
-  } catch (err) {
-    console.error("Error loading questions:", err);
-    questionText.textContent = "Error loading questions.";
   }
 
   function showQuestion() {
     const q = questions[currentIndex];
     if (!q) return;
 
-    // Always hide the answer first
     answerText.classList.add("hidden");
     answerText.style.display = "none";
-
     questionText.textContent = q.question;
     document.getElementById("student-answer").value = "";
     answerText.textContent = q.answer;
     progressText.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
   }
+
+  document.getElementById("reveal-answer").addEventListener("click", () => {
+    answerText.classList.remove("hidden");
+    answerText.style.display = "block";
+  });
+
+  document.getElementById("next-question").addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % questions.length;
+    fadeOutIn(showQuestion);
+  });
+
+  document.getElementById("contact-teacher").addEventListener("click", () => {
+    alert("A request to contact a teacher has been sent.");
+  });
+
+  backBtn.addEventListener("click", () => {
+    window.location.href = "./home.html";
+  });
+
+  // Live reload when new questions added
+  window.addEventListener("storage", event => {
+    if (event.key === "customQuestions") {
+      loadQuestions();
+    }
+  });
+
+  // Also reload when tab gains focus
+  window.addEventListener("focus", loadQuestions);
 
   function fadeOutIn(callback) {
     const container = document.querySelector(".fade-container");
@@ -80,4 +86,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       setTimeout(() => container.classList.remove("fade-in"), 300);
     }, 300);
   }
+
+  await loadQuestions();
 });
