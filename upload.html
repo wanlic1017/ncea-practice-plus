@@ -4,20 +4,32 @@
   <meta charset="UTF-8" />
   <title>Admin Upload | NCEA Practice</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="gradient-bg">
   <div class="container">
     <h1>Admin Upload Panel</h1>
     <form id="upload-form">
       <label>Subject:</label>
-      <input type="text" id="subject" required />
+      <select id="subject" required>
+        <option value="">-- Select a Subject --</option>
+        <option>Physics</option>
+        <option>Chemistry</option>
+        <option>Biology</option>
+        <option>Calculus</option>
+        <option>Statistics</option>
+        <option>Health Science</option>
+      </select>
+
       <label>Question:</label>
       <textarea id="question" required></textarea>
       <label>Answer:</label>
       <textarea id="answer" required></textarea>
+
       <button type="submit">Add Question</button>
     </form>
-    <a href="index.html" class="admin-link">← Back to Practice</a>
+
+    <a href="home.html" class="admin-link">← Back to Home</a>
     <p id="upload-status"></p>
   </div>
 
@@ -33,7 +45,7 @@
       existing.push(newQuestion);
       localStorage.setItem('customQuestions', JSON.stringify(existing));
 
-      document.getElementById('upload-status').textContent = 'Question added locally!';
+      document.getElementById('upload-status').textContent = '✅ Question added locally!';
       e.target.reset();
     });
   </script>
