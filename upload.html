@@ -37,24 +37,25 @@
   </div>
 
   <script>
-    document.getElementById('upload-form').addEventListener('submit', e => {
+    document.getElementById("upload-form").addEventListener("submit", e => {
       e.preventDefault();
 
-      const subject = document.getElementById('subject').value.trim();
-      const question = document.getElementById('question').value.trim();
-      const answer = document.getElementById('answer').value.trim();
+      const subject = document.getElementById("subject").value.trim();
+      const question = document.getElementById("question").value.trim();
+      const answer = document.getElementById("answer").value.trim();
 
       if (!subject || !question || !answer) {
-        alert('Please fill in all fields.');
+        alert("Please fill in all fields.");
         return;
       }
 
       const newQuestion = { subject, question, answer };
-      const existing = JSON.parse(localStorage.getItem('customQuestions') || '[]');
+      const existing = JSON.parse(localStorage.getItem("customQuestions") || "[]");
       existing.push(newQuestion);
-      localStorage.setItem('customQuestions', JSON.stringify(existing));
+      localStorage.setItem("customQuestions", JSON.stringify(existing));
 
-      document.getElementById('upload-status').textContent = '✅ Question saved locally!';
+      document.getElementById("upload-status").textContent =
+        "✅ Question added! It will now appear in that subject's question pool.";
       e.target.reset();
     });
   </script>
