@@ -7,14 +7,32 @@
   },
   {
     "id": 2,
-    "subject": "Mathematics",
-    "question": "Solve for x: 3x + 7 = 16",
-    "answer": "x = 3"
+    "subject": "Calculus",
+    "question": "Differentiate y = 3x² + 2x - 5.",
+    "answer": "dy/dx = 6x + 2"
   },
   {
     "id": 3,
-    "subject": "Physics",
-    "question": "State Newton’s second law of motion.",
-    "answer": "Force equals mass times acceleration (F = ma)."
+    "subject": "Statistics",
+    "question": "What is the mean of 2, 4, 6, 8?",
+    "answer": "Mean = (2+4+6+8)/4 = 5"
+  },
+  {
+    "id": 4,
+    "subject": "Health Science",
+    "question": "Define 'homeostasis'.",
+    "answer": "The maintenance of a stable internal environment in the body."
+  },
+  {
+    "id": 5,
+    "subject": "Chemistry",
+    "question": "State the chemical formula for water.",
+    "answer": "H₂O"
+  },
+  {
+    "id": 6,
+    "subject": "Biology",
+    "question": "What organelle is known as the powerhouse of the cell?",
+    "answer": "The mitochondrion."
   }
 ]
