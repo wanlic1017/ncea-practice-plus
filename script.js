@@ -1,8 +1,13 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const path = window.location.pathname;
-  const isHome = path.endsWith("home.html") || path === "/" || path.endsWith("index.html") && !path.includes("?subject=");
-  
-  // ----- If HOME PAGE -----
+  const isHome =
+    path.endsWith("home.html") ||
+    path === "/" ||
+    (path.endsWith("index.html") && !path.includes("?subject="));
+
+  // ===========================
+  // HOME PAGE (Manage Questions)
+  // ===========================
   if (isHome && document.getElementById("manage-btn")) {
     console.log("Home page detected – enabling Manage Questions");
 
@@ -26,8 +31,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const res = await fetch("./questions.json");
         const allQuestions = await res.json();
         const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-        const combined = [...allQuestions, ...localQs];
 
+        // Combine everything
+        const combined = [...allQuestions, ...localQs];
         if (combined.length === 0) {
           questionList.innerHTML = `<p style="color:#555;">No questions available.</p>`;
           return;
@@ -45,21 +51,41 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         document.querySelectorAll(".delete-btn").forEach(btn => {
-          btn.addEventListener("click", async e => {
+          btn.addEventListener("click", e => {
             const index = parseInt(e.target.getAttribute("data-index"));
-            combined.splice(index, 1);
-            localStorage.setItem("deletedQuestions", JSON.stringify(combined));
-            populateManageModal();
+            deleteQuestion(index);
           });
         });
       } catch (err) {
         console.error("Error loading questions:", err);
-        questionList.innerHTML = "<p style='color:red;'>Failed to load questions.</p>";
+        questionList.innerHTML =
+          "<p style='color:red;'>Failed to load questions.</p>";
       }
+    }
+
+    function deleteQuestion(index) {
+      const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
+      const allDeleted = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
+
+      // Save deleted question (for reference)
+      const res = fetch("./questions.json")
+        .then(r => r.json())
+        .then(defaultQs => {
+          const allQs = [...defaultQs, ...localQs];
+          if (index < allQs.length) {
+            const deleted = allQs[index];
+            allDeleted.push(deleted);
+            localStorage.setItem("deletedQuestions", JSON.stringify(allDeleted));
+            alert(`Deleted question: "${deleted.question}"`);
+          }
+        })
+        .finally(() => populateManageModal());
     }
   }
 
-  // ----- If QUIZ PAGE -----
+  // ===========================
+  // QUIZ PAGE (Practice)
+  // ===========================
   if (window.location.search.includes("subject=")) {
     console.log("Quiz page detected – running quiz logic");
 
@@ -81,12 +107,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const allQuestions = await res.json();
         const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
         const deletedQs = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
+
+        // Combine all
         const combined = [...allQuestions, ...localQs];
+        // Filter by subject
         questions = combined.filter(q => q.subject === selectedSubject);
 
-        // Optional: remove any previously deleted ones
+        // Remove deleted ones
         if (deletedQs.length) {
-          questions = questions.filter(q => !deletedQs.find(d => d.question === q.question));
+          questions = questions.filter(
+            q => !deletedQs.find(d => d.question === q.question)
+          );
         }
 
         if (questions.length === 0) {
