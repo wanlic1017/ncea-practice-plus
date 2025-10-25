@@ -1,11 +1,50 @@
-<!-- Floating Manage Button -->
-<button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCEA Practice Portal</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
 
-<!-- Modal Window -->
-<div id="manage-modal" class="hidden">
-  <div class="modal-content">
-    <h2>Manage Questions</h2>
-    <div id="question-list"></div>
-    <button id="close-manage">Close</button>
+  <!-- Header -->
+  <header class="site-header">
+    <img src="./assets/ncea-logo.png" alt="NCEA Logo" class="ncea-logo">
+    <h1 class="site-title">NCEA Practice Portal</h1>
+  </header>
+
+  <!-- Subject Selection -->
+  <div class="container">
+    <h1>Select a Subject</h1>
+    <p class="subtitle">Choose a subject below to start practising NCEA past exam questions.</p>
+
+    <div class="subject-grid">
+      <button onclick="location.href='./index.html?subject=Physics'">Physics</button>
+      <button onclick="location.href='./index.html?subject=Biology'">Biology</button>
+      <button onclick="location.href='./index.html?subject=Chemistry'">Chemistry</button>
+      <button onclick="location.href='./index.html?subject=Calculus'">Calculus</button>
+      <button onclick="location.href='./index.html?subject=Statistics'">Statistics</button>
+      <button onclick="location.href='./index.html?subject=Health Science'">Health Science</button>
+    </div>
   </div>
-</div>
+
+  <!-- Floating Manage Button (only visible on home page) -->
+  <button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
+
+  <!-- Modal Window -->
+  <div id="manage-modal" class="hidden">
+    <div class="modal-content">
+      <h2>Manage Questions</h2>
+      <p style="margin-top: -5px; color: #555;">View or remove questions from the current question pool.</p>
+      <div id="question-list"></div>
+      <button id="close-manage">Close</button>
+    </div>
+  </div>
+
+  <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
