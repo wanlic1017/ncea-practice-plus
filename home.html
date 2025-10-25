@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NCEA Practice Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome to NCEA Practice Portal</h1>
+    <p>Select a subject to begin:</p>
+
+    <div class="subject-grid">
+      <button onclick="goToSubject('Physics')">Physics</button>
+      <button onclick="goToSubject('Mathematics')">Mathematics</button>
+      <button onclick="goToSubject('Chemistry')">Chemistry</button>
+      <button onclick="goToSubject('Biology')">Biology</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 NCEA Practice | Powered by Wanli</p>
+  </footer>
+
+  <script>
+    function goToSubject(subject) {
+      window.location.href = `index.html?subject=${encodeURIComponent(subject)}`;
+    }
+  </script>
+</body>
+</html>
