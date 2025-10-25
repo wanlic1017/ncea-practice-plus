@@ -56,8 +56,8 @@
       </div>
 
       <form id="add-form" novalidate>
-        <label>Subject:</label>
-        <select id="add-subject">
+        <label for="add-subject">Subject:</label>
+        <select id="add-subject" required>
           <option value="Physics">Physics</option>
           <option value="Biology">Biology</option>
           <option value="Chemistry">Chemistry</option>
@@ -66,13 +66,13 @@
           <option value="Health Science">Health Science</option>
         </select>
 
-        <label>Question:</label>
+        <label for="add-question">Question:</label>
         <textarea id="add-question" placeholder="Enter the question text..." required></textarea>
 
-        <label>Answer:</label>
+        <label for="add-answer">Answer:</label>
         <textarea id="add-answer" placeholder="Enter the answer..." required></textarea>
 
-        <button type="submit">Add Question</button>
+        <button type="submit" id="submit-question">Add Question</button>
       </form>
     </div>
   </div>
@@ -80,32 +80,49 @@
   <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
 
   <script>
-    // ==== Add Question Modal Logic ====
+    // --- Modal open/close ---
     const openAdd = document.getElementById("open-add-modal");
     const addModal = document.getElementById("add-modal");
     const closeAdd = document.getElementById("close-add");
 
-    openAdd.addEventListener("click", () => addModal.classList.remove("hidden"));
-    closeAdd.addEventListener("click", () => addModal.classList.add("hidden"));
+    openAdd.addEventListener("click", () => {
+      addModal.classList.remove("hidden");
+    });
 
+    closeAdd.addEventListener("click", () => {
+      addModal.classList.add("hidden");
+    });
+
+    // --- Add Question Form Logic ---
     const form = document.getElementById("add-form");
-    form.addEventListener("submit", e => {
+
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
 
+      // Explicitly fetch DOM values on submit
       const subjectEl = document.getElementById("add-subject");
       const questionEl = document.getElementById("add-question");
       const answerEl = document.getElementById("add-answer");
 
-      const subject = subjectEl.value;
-      const question = questionEl.value.trim();
-      const answer = answerEl.value.trim();
+      const subject = subjectEl ? subjectEl.value.trim() : "";
+      const question = questionEl ? questionEl.value.trim() : "";
+      const answer = answerEl ? answerEl.value.trim() : "";
 
-      if (question.length === 0 || answer.length === 0) {
+      // Validation
+      if (!question || !answer) {
         alert("⚠️ Please fill in both question and answer.");
         return;
       }
 
-      const stored = JSON.parse(localStorage.getItem("customQuestions") || "[]");
+      // Get existing custom questions
+      let stored = [];
+      try {
+        stored = JSON.parse(localStorage.getItem("customQuestions")) || [];
+      } catch {
+        stored = [];
+      }
+
+      // Add new question
       stored.push({ subject, question, answer });
       localStorage.setItem("customQuestions", JSON.stringify(stored));
 
