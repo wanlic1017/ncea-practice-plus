@@ -4,10 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NCEA Practice Portal</title>
-  <link rel="stylesheet" href="./style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css?cb=20251026" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body class="gradient-bg">
+<body>
+
+  <!-- Header with NCEA logo -->
+  <header class="site-header">
+    <img src="./assets/ncea-logo.png" alt="NCEA Logo" class="ncea-logo">
+    <h1 class="site-title">NCEA Practice Portal</h1>
+  </header>
+
+  <!-- Main Quiz Container -->
   <div class="container">
     <div class="quiz-header">
       <button id="back-btn">← Back</button>
@@ -19,16 +27,32 @@
     <div id="question-area" class="fade-container">
       <p id="question-text">Loading question...</p>
       <textarea id="student-answer" placeholder="Write your answer here..."></textarea>
+
       <div class="button-row">
         <button id="reveal-answer">Reveal Answer</button>
         <button id="next-question">Next Question</button>
         <button id="contact-teacher">Contact Teacher</button>
       </div>
+
       <p id="answer-text" class="hidden"></p>
     </div>
   </div>
 
+  <!-- Floating Manage Button -->
+  <button id="manage-btn">⚙️ Manage Questions</button>
+
+  <!-- Modal Window -->
+  <div id="manage-modal" class="hidden">
+    <div class="modal-content">
+      <h2>Manage Questions</h2>
+      <div id="question-list"></div>
+      <button id="close-manage">Close</button>
+    </div>
+  </div>
+
   <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
-  <script src="./script.js"></script>
+
+  <!-- Scripts -->
+  <script src="./script.js?cb=20251026"></script>
 </body>
 </html>
