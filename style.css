@@ -10,7 +10,7 @@ html, body {
 
 /* ===== HEADER (Dark Banner) ===== */
 .dark-banner {
-  background-color: #003366; /* Deep blue header */
+  background-color: #003366 !important; /* Deep navy blue */
   color: #ffffff;
   text-align: center;
   padding: 18px 0;
@@ -23,7 +23,7 @@ html, body {
   margin: 0;
 }
 
-/* ===== CONTAINER & TYPOGRAPHY ===== */
+/* ===== CONTAINER ===== */
 .container {
   background: #ffffff;
   border: 1px solid #e3e6eb;
@@ -124,7 +124,7 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.1);
 }
 
-/* ===== FORM BUTTONS ===== */
+/* ===== FORM BUTTON ===== */
 #add-form button[type="submit"] {
   margin-top: 24px;
   padding: 10px 18px;
