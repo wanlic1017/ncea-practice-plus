@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const answerText = document.getElementById("answer-text");
   const backBtn = document.getElementById("back-btn");
 
+  // Manage modal elements
   const manageBtn = document.getElementById("manage-btn");
   const manageModal = document.getElementById("manage-modal");
   const closeManage = document.getElementById("close-manage");
@@ -14,16 +15,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentIndex = 0;
   let selectedSubject = null;
 
+  // Get subject name from URL
   const params = new URLSearchParams(window.location.search);
   selectedSubject = params.get("subject") || "General";
   subjectTitle.textContent = `${selectedSubject} Practice Questions`;
 
+  /* ---------- Load Questions ---------- */
   async function loadQuestions() {
     try {
       const res = await fetch(`./questions.json?cb=${Date.now()}`);
       const allQuestions = await res.json();
       const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
 
+      // Combine global + local
       const combined = [...allQuestions, ...localQs];
       questions = combined.filter(q => q.subject === selectedSubject);
 
@@ -40,6 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  /* ---------- Display Question ---------- */
   function showQuestion() {
     const q = questions[currentIndex];
     if (!q) return;
@@ -51,6 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     progressText.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
   }
 
+  /* ---------- Button Functions ---------- */
   document.getElementById("reveal-answer").addEventListener("click", () => {
     answerText.classList.remove("hidden");
     answerText.style.display = "block";
@@ -69,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "./home.html";
   });
 
-  /* ---------- MANAGE QUESTIONS ---------- */
+  /* ---------- Manage Modal ---------- */
   manageBtn.addEventListener("click", () => {
     populateManageModal();
     manageModal.classList.remove("hidden");
