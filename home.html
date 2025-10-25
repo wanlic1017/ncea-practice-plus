@@ -14,8 +14,8 @@
     <h1 class="site-title">NCEA Practice Portal</h1>
   </header>
 
-  <!-- Subject Grid -->
-  <div class="container">
+  <!-- ========== MAIN SECTION ========== -->
+  <div class="container" id="home-section">
     <h1>Select a Subject</h1>
     <p class="subtitle">Choose a subject below to start practising NCEA past exam questions.</p>
 
@@ -27,11 +27,20 @@
       <button onclick="location.href='./index.html?subject=Statistics'">Statistics</button>
       <button onclick="location.href='./index.html?subject=Health Science'">Health Science</button>
     </div>
+
+    <div style="text-align:center; margin-top:40px;">
+      <button id="open-add-tab">➕ Add New Question</button>
+    </div>
   </div>
 
-  <!-- Add Question Form -->
-  <div class="container">
-    <h2>Add New Question</h2>
+  <!-- ========== ADD QUESTION TAB ========== -->
+  <div class="container hidden" id="add-tab">
+    <div class="quiz-header">
+      <button id="back-btn">← Back</button>
+      <h1 style="text-align:center;">Add a New Question</h1>
+      <div></div>
+    </div>
+
     <form id="add-form">
       <label>Subject:</label>
       <select id="add-subject">
@@ -67,6 +76,45 @@
   </div>
 
   <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
+
+  <script>
+    // --- Switch between Home and Add Tab ---
+    const openAddTab = document.getElementById("open-add-tab");
+    const homeSection = document.getElementById("home-section");
+    const addTab = document.getElementById("add-tab");
+    const backBtn = document.getElementById("back-btn");
+
+    openAddTab.addEventListener("click", () => {
+      homeSection.classList.add("hidden");
+      addTab.classList.remove("hidden");
+    });
+
+    backBtn.addEventListener("click", () => {
+      addTab.classList.add("hidden");
+      homeSection.classList.remove("hidden");
+    });
+
+    // --- Add Question Logic ---
+    const form = document.getElementById("add-form");
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const subject = document.getElementById("add-subject").value;
+      const question = document.getElementById("add-question").value.trim();
+      const answer = document.getElementById("add-answer").value.trim();
+
+      if (!question || !answer) {
+        alert("Please fill in both question and answer.");
+        return;
+      }
+
+      const stored = JSON.parse(localStorage.getItem("customQuestions") || "[]");
+      stored.push({ subject, question, answer });
+      localStorage.setItem("customQuestions", JSON.stringify(stored));
+
+      alert("✅ Question added successfully!");
+      form.reset();
+    });
+  </script>
 
   <script src="./script.js"></script>
 </body>
