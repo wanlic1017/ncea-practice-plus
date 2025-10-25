@@ -27,11 +27,30 @@
       <button onclick="location.href='./index.html?subject=Statistics'">Statistics</button>
       <button onclick="location.href='./index.html?subject=Health Science'">Health Science</button>
     </div>
+  </div>
 
-    <!-- Add Question Button -->
-    <div style="text-align:center; margin-top:40px;">
-      <button id="add-question-btn" onclick="window.location.href='./add.html'">➕ Add New Question</button>
-    </div>
+  <!-- Add Question Form -->
+  <div class="container">
+    <h2>Add New Question</h2>
+    <form id="add-form">
+      <label>Subject:</label>
+      <select id="add-subject">
+        <option value="Physics">Physics</option>
+        <option value="Biology">Biology</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Calculus">Calculus</option>
+        <option value="Statistics">Statistics</option>
+        <option value="Health Science">Health Science</option>
+      </select>
+
+      <label>Question:</label>
+      <textarea id="add-question" placeholder="Enter the question text..."></textarea>
+
+      <label>Answer:</label>
+      <textarea id="add-answer" placeholder="Enter the answer..."></textarea>
+
+      <button type="submit">Add Question</button>
+    </form>
   </div>
 
   <!-- Floating Manage Button -->
