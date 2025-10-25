@@ -57,6 +57,9 @@
       document.getElementById("upload-status").textContent =
         "✅ Question added! It will now appear in that subject's question pool.";
       e.target.reset();
+
+      // Notify other tabs to reload automatically
+      window.dispatchEvent(new StorageEvent("storage", { key: "customQuestions" }));
     });
   </script>
 </body>
