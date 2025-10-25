@@ -8,16 +8,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   let questions = [];
   let currentIndex = 0;
 
-  // subject from URL
+  // Get selected subject from URL
   const params = new URLSearchParams(window.location.search);
   const selectedSubject = params.get("subject") || "General";
   subjectTitle.textContent = `${selectedSubject} Practice Questions`;
 
   try {
-    // add cache-buster so GitHub always fetches latest JSON
+    // Fetch main question pool
     const res = await fetch(`./questions.json?cb=${Date.now()}`);
     const allQuestions = await res.json();
-    questions = allQuestions.filter(q => q.subject === selectedSubject);
+
+    // Fetch locally added questions (from Admin Upload)
+    const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
+
+    // Combine both
+    const combined = [...allQuestions, ...localQs];
+
+    // Filter by subject
+    questions = combined.filter(q => q.subject === selectedSubject);
 
     if (questions.length === 0) {
       questionText.textContent = `No questions available for ${selectedSubject}.`;
@@ -26,6 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     showQuestion();
 
+    // Button event listeners
     document.getElementById("reveal-answer").addEventListener("click", () => {
       answerText.classList.remove("hidden");
     });
@@ -50,8 +59,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   function showQuestion() {
     const q = questions[currentIndex];
     if (!q) return;
-    // always hide answer when showing a new question
+
+    // Always hide the answer first
     answerText.classList.add("hidden");
+    answerText.style.display = "none";
+
     questionText.textContent = q.question;
     document.getElementById("student-answer").value = "";
     answerText.textContent = q.answer;
