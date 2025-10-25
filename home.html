@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NCEA Practice Portal</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 </head>
 <body class="gradient-bg">
   <div class="glass-container">
     <h1 class="neon-title">NCEA Practice Portal</h1>
-    <p class="subtitle">Select a subject to begin</p>
+    <p class="subtitle">Select a subject to begin:</p>
 
     <div class="subject-grid">
       <button onclick="goToSubject('Physics')">Physics</button>
@@ -26,7 +26,7 @@
 
   <script>
     function goToSubject(subject) {
-      window.location.href = `index.html?subject=${encodeURIComponent(subject)}`;
+      window.location.href = `./index.html?subject=${encodeURIComponent(subject)}`;
     }
   </script>
 </body>
