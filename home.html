@@ -1,190 +1,71 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const isHome = location.pathname.endsWith("home.html") || location.pathname === "/" || location.pathname.endsWith("/ncea-practice-plus/");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCEA Practice Portal</title>
+  <link rel="stylesheet" href="./style.css?v=20251028" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
 
-  // =========================
-  // HOME PAGE: Add & Manage
-  // =========================
-  if (isHome) {
-    // ----- Add modal -----
-    const openAddBtn = document.getElementById("open-add-modal");
-    const addModal = document.getElementById("add-modal");
-    const closeAddBtn = document.getElementById("close-add");
-    const addForm = document.getElementById("add-form");
+  <header class="site-header dark-banner">
+    <h1 class="site-title">NCEA Practice Portal</h1>
+  </header>
 
-    if (openAddBtn && addModal && closeAddBtn && addForm) {
-      openAddBtn.addEventListener("click", () => addModal.classList.remove("hidden"));
-      closeAddBtn.addEventListener("click", () => addModal.classList.add("hidden"));
+  <div class="container">
+    <h1>Select a Subject</h1>
+    <p class="subtitle">Choose a subject below to start practising NCEA past exam questions.</p>
 
-      // Robust submission via FormData
-      addForm.addEventListener("submit", (e) => {
-        e.preventDefault();
+    <div class="subject-grid">
+      <button onclick="location.href='./index.html?subject=Physics'">Physics</button>
+      <button onclick="location.href='./index.html?subject=Biology'">Biology</button>
+      <button onclick="location.href='./index.html?subject=Chemistry'">Chemistry</button>
+      <button onclick="location.href='./index.html?subject=Calculus'">Calculus</button>
+      <button onclick="location.href='./index.html?subject=Statistics'">Statistics</button>
+      <button onclick="location.href='./index.html?subject=Health Science'">Health Science</button>
+    </div>
 
-        const fd = new FormData(addForm);
-        const subject = String(fd.get("subject") || "").trim();
-        const question = String(fd.get("question") || "").trim();
-        const answer = String(fd.get("answer") || "").trim();
+    <div style="text-align:center; margin-top:40px;">
+      <button id="open-add-modal">➕ Add New Question</button>
+    </div>
+  </div>
 
-        // Debug (optional): uncomment to see exactly what is being captured
-        // console.log({ subject, question, answer });
+  <!-- Floating Manage Button -->
+  <button id="manage-btn" title="Manage Questions">⚙️ Manage Questions</button>
 
-        if (!question || !answer) {
-          alert("⚠️ Please fill in both question and answer.");
-          return;
-        }
+  <!-- Add Question Modal -->
+  <div id="add-modal" class="hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Question</h2>
+        <button id="close-add" class="close-btn">✕</button>
+      </div>
 
-        let stored = [];
-        try {
-          stored = JSON.parse(localStorage.getItem("customQuestions")) || [];
-        } catch {
-          stored = [];
-        }
+      <form id="add-form">
+        <label for="subject">Subject:</label>
+        <select id="subject" name="subject" required>
+          <option value="Physics">Physics</option>
+          <option value="Biology">Biology</option>
+          <option value="Chemistry">Chemistry</option>
+          <option value="Calculus">Calculus</option>
+          <option value="Statistics">Statistics</option>
+          <option value="Health Science">Health Science</option>
+        </select>
 
-        stored.push({ subject, question, answer });
-        localStorage.setItem("customQuestions", JSON.stringify(stored));
+        <label for="question">Question:</label>
+        <textarea id="question" name="question" placeholder="Enter the question text..." required></textarea>
 
-        alert("✅ Question added successfully!");
-        addForm.reset();
-        addModal.classList.add("hidden");
-      });
-    }
+        <label for="answer">Answer:</label>
+        <textarea id="answer" name="answer" placeholder="Enter the answer..." required></textarea>
 
-    // ----- Manage modal -----
-    const manageBtn = document.getElementById("manage-btn");
-    const manageModal = document.getElementById("manage-modal");
-    const closeManage = document.getElementById("close-manage");
-    const questionList = document.getElementById("question-list");
+        <button type="submit">Add Question</button>
+      </form>
+    </div>
+  </div>
 
-    function populateManageModal() {
-      if (!questionList) return;
-      questionList.innerHTML = "<p>Loading...</p>";
+  <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
 
-      fetch("./questions.json")
-        .then((r) => r.json())
-        .then((defaultQs) => {
-          const customQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-          const deletedQs = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
-          const combined = [...defaultQs, ...customQs].filter(
-            (q) => !deletedQs.some((d) => d.question === q.question)
-          );
-
-          if (!combined.length) {
-            questionList.innerHTML = `<p style="color:#555;">No questions available.</p>`;
-            return;
-          }
-
-          questionList.innerHTML = "";
-          combined.forEach((q, i) => {
-            const item = document.createElement("div");
-            item.className = "question-item";
-            item.innerHTML = `
-              <span>${i + 1}. <strong>${q.subject}</strong> – ${q.question}</span>
-              <button class="delete-btn" data-q="${encodeURIComponent(q.question)}">Delete</button>
-            `;
-            questionList.appendChild(item);
-          });
-
-          questionList.querySelectorAll(".delete-btn").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-              const qText = decodeURIComponent(e.currentTarget.getAttribute("data-q") || "");
-              const deleted = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
-              if (!deleted.some((d) => d.question === qText)) {
-                deleted.push({ question: qText });
-                localStorage.setItem("deletedQuestions", JSON.stringify(deleted));
-              }
-              populateManageModal();
-            });
-          });
-        })
-        .catch(() => {
-          questionList.innerHTML = "<p style='color:red;'>Failed to load questions.</p>";
-        });
-    }
-
-    if (manageBtn && manageModal && closeManage) {
-      manageBtn.addEventListener("click", () => {
-        populateManageModal();
-        manageModal.classList.remove("hidden");
-      });
-      closeManage.addEventListener("click", () => manageModal.classList.add("hidden"));
-    }
-  }
-
-  // =========================
-  // QUIZ PAGE: index.html
-  // =========================
-  if (location.search.includes("subject=")) {
-    const questionText = document.getElementById("question-text");
-    const subjectTitle = document.getElementById("subject-title");
-    const progressText = document.getElementById("progress-text");
-    const answerText = document.getElementById("answer-text");
-    const backBtn = document.getElementById("back-btn");
-
-    const params = new URLSearchParams(location.search);
-    const subject = params.get("subject") || "General";
-    if (subjectTitle) subjectTitle.textContent = `${subject} Practice Questions`;
-
-    let questions = [];
-    let current = 0;
-
-    async function load() {
-      try {
-        const res = await fetch("./questions.json");
-        const defaults = await res.json();
-        const custom = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-        const deleted = JSON.parse(localStorage.getItem("deletedQuestions") || "[]");
-
-        questions = [...defaults, ...custom]
-          .filter((q) => q.subject === subject)
-          .filter((q) => !deleted.some((d) => d.question === q.question));
-
-        if (!questions.length) {
-          if (questionText) questionText.textContent = `No questions available for ${subject}.`;
-          return;
-        }
-
-        show();
-      } catch (e) {
-        if (questionText) questionText.textContent = "Error loading questions.";
-      }
-    }
-
-    function show() {
-      const q = questions[current];
-      if (!q) return;
-      if (answerText) {
-        answerText.textContent = q.answer;
-        answerText.classList.add("hidden");
-        answerText.style.display = "none";
-      }
-      if (questionText) questionText.textContent = q.question;
-      const sa = document.getElementById("student-answer");
-      if (sa) sa.value = "";
-      if (progressText) progressText.textContent = `Question ${current + 1} of ${questions.length}`;
-    }
-
-    const revealBtn = document.getElementById("reveal-answer");
-    if (revealBtn && answerText) {
-      revealBtn.addEventListener("click", () => {
-        answerText.classList.remove("hidden");
-        answerText.style.display = "block";
-      });
-    }
-
-    const nextBtn = document.getElementById("next-question");
-    if (nextBtn) {
-      nextBtn.addEventListener("click", () => {
-        current = (current + 1) % questions.length;
-        show();
-      });
-    }
-
-    const contactBtn = document.getElementById("contact-teacher");
-    if (contactBtn) {
-      contactBtn.addEventListener("click", () => alert("A request to contact a teacher has been sent."));
-    }
-
-    if (backBtn) backBtn.addEventListener("click", () => (window.location.href = "./home.html"));
-
-    load();
-  }
-});
+  <script src="./script.js?v=20251028"></script>
+</body>
+</html>
