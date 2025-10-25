@@ -9,7 +9,7 @@
 </head>
 <body>
 
-  <!-- Header with NCEA logo -->
+  <!-- Header -->
   <header class="site-header">
     <img src="./assets/ncea-logo.png" alt="NCEA Logo" class="ncea-logo">
     <h1 class="site-title">NCEA Practice Portal</h1>
@@ -19,7 +19,8 @@
   <div class="container">
     <div class="quiz-header">
       <button id="back-btn">← Back</button>
-      <h1 id="subject-title" class="neon-title">Loading...</h1>
+      <h1 id="subject-title">Loading...</h1>
+      <div></div> <!-- grid spacer -->
     </div>
 
     <div id="progress-text">Loading questions...</div>
@@ -39,7 +40,7 @@
   </div>
 
   <!-- Floating Manage Button -->
-  <button id="manage-btn">⚙️ Manage Questions</button>
+  <button id="manage-btn" title="Manage custom questions">⚙️ Manage Questions</button>
 
   <!-- Modal Window -->
   <div id="manage-modal" class="hidden">
@@ -52,7 +53,6 @@
 
   <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
 
-  <!-- Scripts -->
   <script src="./script.js?cb=20251026"></script>
 </body>
 </html>
