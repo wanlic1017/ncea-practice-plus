@@ -4,18 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NCEA Practice Portal</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
 </head>
 <body class="gradient-bg">
   <div class="container">
     <div class="quiz-header">
       <button id="back-btn">← Back</button>
-      <h1 id="subject-title">Loading...</h1>
+      <h1 id="subject-title" class="neon-title">Loading...</h1>
     </div>
 
-    <div id="progress-text">Question 1 of 1</div>
-    <div id="question-area">
+    <div id="progress-text">Loading questions...</div>
+
+    <div id="question-area" class="fade-container">
       <p id="question-text">Loading question...</p>
       <textarea id="student-answer" placeholder="Write your answer here..."></textarea>
       <div class="button-row">
@@ -28,7 +29,6 @@
   </div>
 
   <footer>© 2025 NCEA Practice | Powered by Wanli</footer>
-
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
