@@ -89,3 +89,27 @@ footer {
 .admin-link:hover {
   text-decoration: underline;
 }
+
+.subject-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.subject-grid button {
+  padding: 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #0072ce;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.subject-grid button:hover {
+  background-color: #005fa3;
+  transform: translateY(-2px);
+}
