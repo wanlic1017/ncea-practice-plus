@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let currentIndex = 0;
   let selectedSubject = null;
 
-  // Get subject name from URL
+  // Get subject from URL
   const params = new URLSearchParams(window.location.search);
   selectedSubject = params.get("subject") || "General";
   subjectTitle.textContent = `${selectedSubject} Practice Questions`;
@@ -23,11 +23,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ---------- Load Questions ---------- */
   async function loadQuestions() {
     try {
-      const res = await fetch(`./questions.json?cb=${Date.now()}`);
+      const res = await fetch("./questions.json");
       const allQuestions = await res.json();
       const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
 
-      // Combine global + local
+      // Combine all sources
       const combined = [...allQuestions, ...localQs];
       questions = combined.filter(q => q.subject === selectedSubject);
 
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  /* ---------- Display Question ---------- */
+  /* ---------- Show Question ---------- */
   function showQuestion() {
     const q = questions[currentIndex];
     if (!q) return;
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     progressText.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
   }
 
-  /* ---------- Button Functions ---------- */
+  /* ---------- Buttons ---------- */
   document.getElementById("reveal-answer").addEventListener("click", () => {
     answerText.classList.remove("hidden");
     answerText.style.display = "block";
@@ -87,15 +87,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function populateManageModal() {
     questionList.innerHTML = "";
-    const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-    const filtered = localQs.filter(q => q.subject === selectedSubject);
-
-    if (filtered.length === 0) {
-      questionList.innerHTML = `<p style="color:#555;">No custom questions for ${selectedSubject}.</p>`;
+    if (questions.length === 0) {
+      questionList.innerHTML = `<p style="color:#555;">No questions found for ${selectedSubject}.</p>`;
       return;
     }
 
-    filtered.forEach((q, i) => {
+    questions.forEach((q, i) => {
       const item = document.createElement("div");
       item.className = "question-item";
       item.innerHTML = `
@@ -107,21 +104,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.querySelectorAll(".delete-btn").forEach(btn => {
       btn.addEventListener("click", e => {
-        const index = e.target.getAttribute("data-index");
-        deleteQuestion(index);
+        const index = parseInt(e.target.getAttribute("data-index"));
+        deleteAnyQuestion(index);
       });
     });
   }
 
-  function deleteQuestion(index) {
-    const localQs = JSON.parse(localStorage.getItem("customQuestions") || "[]");
-    const filtered = localQs.filter(q => q.subject === selectedSubject);
-    const keep = localQs.filter(q => q.subject !== selectedSubject);
-    filtered.splice(index, 1);
-    const updated = [...keep, ...filtered];
-    localStorage.setItem("customQuestions", JSON.stringify(updated));
+  function deleteAnyQuestion(index) {
+    questions.splice(index, 1);
     populateManageModal();
-    loadQuestions();
+    if (currentIndex >= questions.length) currentIndex = 0;
+    showQuestion();
   }
 
   /* ---------- Helpers ---------- */
