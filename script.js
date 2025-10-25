@@ -1,10 +1,10 @@
 // ==================================================
-// NCEA Practice Portal Script (Stable GitHub Pages Version)
+// NCEA Practice Portal Script – Stable Version (GitHub Pages)
 // ==================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Wait briefly for DOM (fixes GitHub Pages timing)
-  setTimeout(initPortal, 100);
+  // Add a slight delay to ensure DOM is ready
+  setTimeout(initPortal, 120);
 });
 
 function initPortal() {
@@ -19,7 +19,7 @@ function initPortal() {
   // HOME PAGE LOGIC
   // ==================================================
   if (isHome) {
-    console.log("✅ Initialising Home Page scripts...");
+    console.log("✅ Home Page scripts loaded");
 
     // ---------- Add Question Modal ----------
     const addModal = document.getElementById("add-modal");
@@ -29,12 +29,9 @@ function initPortal() {
 
     if (openAddBtn && addModal && closeAddBtn && addForm) {
       openAddBtn.onclick = () => {
-        console.log("🟢 Add modal opened");
         addModal.classList.remove("hidden");
       };
-
       closeAddBtn.onclick = () => {
-        console.log("🔵 Add modal closed");
         addModal.classList.add("hidden");
       };
 
@@ -45,7 +42,7 @@ function initPortal() {
         const question = document.getElementById("question").value.trim();
         const answer = document.getElementById("answer").value.trim();
 
-        console.log("Submitting:", { subject, question, answer });
+        console.log("Adding question:", { subject, question, answer });
 
         if (!question || !answer) {
           alert("⚠️ Please fill in both question and answer.");
@@ -67,23 +64,38 @@ function initPortal() {
         addModal.classList.add("hidden");
       });
     } else {
-      console.warn("⚠️ Add Question modal elements not found.");
+      console.warn("⚠️ Add modal elements not found in DOM.");
     }
 
-    // ---------- Manage Questions ----------
+    // ---------- Manage Questions Modal ----------
     const manageBtn = document.getElementById("manage-btn");
     const manageModal = document.getElementById("manage-modal");
     const closeManage = document.getElementById("close-manage");
     const questionList = document.getElementById("question-list");
 
     if (manageBtn && manageModal && closeManage && questionList) {
-      console.log("✅ Manage modal initialised");
+      console.log("✅ Manage modal ready");
+
+      manageBtn.onclick = () => {
+        console.log("🟢 Manage Questions clicked");
+        populateManageModal();
+        manageModal.classList.remove("hidden");
+      };
+
+      closeManage.onclick = () => {
+        console.log("🔵 Manage modal closed");
+        manageModal.classList.add("hidden");
+      };
 
       function populateManageModal() {
         questionList.innerHTML = "<p>Loading...</p>";
 
+        // Fetch from local questions.json (fallback-safe for GitHub Pages)
         fetch("./questions.json")
-          .then((r) => r.json())
+          .then((r) => {
+            if (!r.ok) throw new Error("Network error");
+            return r.json();
+          })
           .then((defaultQs) => {
             const customQs = JSON.parse(
               localStorage.getItem("customQuestions") || "[]"
@@ -97,15 +109,16 @@ function initPortal() {
             );
 
             if (!combined.length) {
-              questionList.innerHTML = `<p style="color:#555;">No questions available.</p>`;
+              questionList.innerHTML =
+                "<p style='color:#555;'>No questions available.</p>";
               return;
             }
 
             questionList.innerHTML = "";
             combined.forEach((q, i) => {
-              const item = document.createElement("div");
-              item.className = "question-item";
-              item.innerHTML = `
+              const div = document.createElement("div");
+              div.className = "question-item";
+              div.innerHTML = `
                 <span>${i + 1}. <strong>${q.subject}</strong> – ${
                 q.question
               }</span>
@@ -113,15 +126,16 @@ function initPortal() {
                   q.question
                 )}">Delete</button>
               `;
-              questionList.appendChild(item);
+              questionList.appendChild(div);
             });
 
+            // Attach delete listeners
             questionList.querySelectorAll(".delete-btn").forEach((btn) => {
               btn.addEventListener("click", (e) => {
                 const qText = decodeURIComponent(
-                  e.currentTarget.getAttribute("data-q") || ""
+                  e.currentTarget.getAttribute("data-q")
                 );
-                const deleted = JSON.parse(
+                let deleted = JSON.parse(
                   localStorage.getItem("deletedQuestions") || "[]"
                 );
                 if (!deleted.some((d) => d.question === qText)) {
@@ -131,28 +145,18 @@ function initPortal() {
                     JSON.stringify(deleted)
                   );
                 }
-                populateManageModal();
+                populateManageModal(); // Refresh view
               });
             });
           })
-          .catch(() => {
+          .catch((err) => {
+            console.error("❌ Failed to load questions.json:", err);
             questionList.innerHTML =
-              "<p style='color:red;'>Failed to load questions.</p>";
+              "<p style='color:red;'>Failed to load questions list.</p>";
           });
       }
-
-      manageBtn.onclick = () => {
-        console.log("🟢 Manage modal opened");
-        populateManageModal();
-        manageModal.classList.remove("hidden");
-      };
-
-      closeManage.onclick = () => {
-        console.log("🔵 Manage modal closed");
-        manageModal.classList.add("hidden");
-      };
     } else {
-      console.warn("⚠️ Manage modal elements not found.");
+      console.warn("⚠️ Manage modal elements not found in DOM.");
     }
   }
 
@@ -160,7 +164,8 @@ function initPortal() {
   // QUIZ PAGE LOGIC (index.html)
   // ==================================================
   if (window.location.search.includes("subject=")) {
-    console.log("✅ Initialising Quiz Page scripts...");
+    console.log("✅ Quiz Page scripts loaded");
+
     const params = new URLSearchParams(window.location.search);
     const subject = params.get("subject") || "General";
 
