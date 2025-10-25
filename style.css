@@ -31,6 +31,29 @@ h1 {
   margin-bottom: 30px;
 }
 
+/* ===== HEADER (LOGO + TITLE) ===== */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 0 10px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #ffffff;
+}
+
+.ncea-logo {
+  height: 50px;
+  width: auto;
+}
+
+.site-title {
+  font-size: 22px;
+  color: #0052cc;
+  font-weight: 600;
+  margin: 0;
+}
+
 /* ===== SUBJECT SELECTION GRID ===== */
 .subject-grid {
   display: grid;
@@ -62,22 +85,38 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   margin-bottom: 24px;
 }
 
+/* Compact Back Button */
 #back-btn {
   border: none;
   background: #e9edf3;
   color: #333;
   font-weight: 500;
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
   transition: 0.2s;
+  width: auto;              /* only as wide as text */
+  flex-shrink: 0;           /* don’t stretch */
 }
 
 #back-btn:hover {
   background: #dce3ed;
+}
+
+/* Centred Subject Title */
+#subject-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #0052cc;
+  white-space: nowrap;
 }
 
 /* ===== QUESTION AREA ===== */
@@ -228,6 +267,12 @@ form button[type="submit"]:hover {
   .container, .glass-container {
     margin: 30px 15px;
     padding: 25px 20px;
+  }
+
+  #subject-title {
+    font-size: 17px;
+    max-width: 80%;
+    white-space: normal;
   }
 
   button {
