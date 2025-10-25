@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Upload | NCEA Practice</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Upload Panel</h1>
+    <form id="upload-form">
+      <label>Subject:</label>
+      <input type="text" id="subject" required />
+      <label>Question:</label>
+      <textarea id="question" required></textarea>
+      <label>Answer:</label>
+      <textarea id="answer" required></textarea>
+      <button type="submit">Add Question</button>
+    </form>
+    <a href="index.html" class="admin-link">← Back to Practice</a>
+    <p id="upload-status"></p>
+  </div>
+
+  <script>
+    document.getElementById('upload-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const subject = document.getElementById('subject').value;
+      const question = document.getElementById('question').value;
+      const answer = document.getElementById('answer').value;
+
+      const newQuestion = { subject, question, answer };
+      const existing = JSON.parse(localStorage.getItem('customQuestions') || '[]');
+      existing.push(newQuestion);
+      localStorage.setItem('customQuestions', JSON.stringify(existing));
+
+      document.getElementById('upload-status').textContent = 'Question added locally!';
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
